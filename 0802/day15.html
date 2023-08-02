@@ -3,9 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
   <title>Document</title>
 </head>
 <body>
-  
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <script>
+    btn.addEventListener('click',()=>{
+      list.push(input.value);
+      listGroup.innerHTML = '' ;
+      list.forEach((item) => {
+        console.log(item.name);
+      //   listGroup.innerHTML += ``${}</div>
+       });
+      input.value ='';
+      console.log(list);
+    });
+    listGroup.addEventListener('click',(event) =>{
+    const addEventListener ( 'click',(event)  => {
+      const addEventListener = event.target;
+      listElement.classList.add('active');
+      const clickedData = list.find((item) => string(item.id) === listElement.dataset.
+      id);
+      clickedData.isDone = 1;
+      console.log(list);
+    });
+    });
+  </script>
 </body>
 </html>
