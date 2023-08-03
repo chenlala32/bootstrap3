@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="w-50 min-vh-100 mx-auto d-flex flex-column align-items-center justify-content-center">
+      <div class="list-group w-100">
+        <div class="list-group-item list-group-item-action" aria-current="true">尚未有代辦事項...</div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="請輸入代辦事項" aria-label="請輸入代辦事項" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2">新增</button>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script>
+
+      // 誰 甚麼時候 做甚麼
+      const listGroup = document.querySelector('.list-group');
+      const input = document.querySelector('input.form-control');
+      const btn = document.querySelector('button.btn.btn-outline-secondary');
+      // null
+      const storage = sessionStorage.getItem('checkList');
+
+      let list = [];
+      if (storage) {
+        list = JSON.parse(storage);
+        renderList();
+      }
+
+
+      btn.addEventListener('click', () => {
+        const value = input.value;
+        // 關卡控制
+        if (value.trim() === '') return;
+
+        // 儲存過往輸入的資料
+        list.push({
+          id: list.length + 1,
+          // 代辦事項的名稱
+          name: value,
+          // 0: 未執行 , 1: 已執行
+          isDone: 0,
+        });
+
+        renderList();
+
+        // 清空輸入格
+        input.value = '';
+
+        console.log(JSON.stringify(list));
+        // 存進sessionStorage
+        sessionStorage.setItem('checkList', JSON.stringify(list));
+      });
+
+      // 包住全部清單的元素 : 事項要變藍色且isDone要改為1
+      listGroup.addEventListener('click', (event) => {
+        const listElement = event.target;
+        // event.target: 你實際點擊到的元素
+        listElement.classList.add('active');
+        
+        // item.id 是個數字 而listElement.dataset.id是個字串時
+        // item.id == listElement.dataset.id  => 1 == '1' => true
+        // item.id === listElement.dataset.id  => 1 === '1' => false
+        const clickedData = list.find((item) => item.id == listElement.dataset.id);
+        clickedData.isDone = 1;
+        // 存進sessionStorage
+        sessionStorage.setItem('checkList', JSON.stringify(list));
+      });
+
+      function renderList() {
+        // 清空清單
+        listGroup.innerHTML = '';
+        // 把所有過往資料渲染到畫面
+        list.forEach((item) => {
+          if (item.isDone === 0) {
+            listGroup.innerHTML += `<div class="list-group-item list-group-item-action" aria-current="true" data-id="${item.id}">${item.name}</div>`;
+          } else {
+            listGroup.innerHTML += `<div class="list-group-item list-group-item-action active" aria-current="true" data-id="${item.id}">${item.name}</div>`;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
